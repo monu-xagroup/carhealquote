@@ -30,6 +30,7 @@
     for(var i=0; i<array.length; i++) {
       if(!(localStorage.getItem(array[i])))  {
         localStorage.setItem(array[i], data[array[i]])
+        console.log('Set value for',array[i] )
       }
     }
     // localStorage.setItem('correlationId', data[array[i]])
