@@ -1,0 +1,132 @@
+/*button css */
+button,
+a.button {
+    cursor: pointer;
+    border: none;
+    outline: none;
+    padding: 10px 12px;
+    gap: 7px;
+    display: flex;
+    flex-basis: fit-content;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 18px;
+    width: 100%;
+    font-family: "Inter", sans-serif;
+    label {
+        font-size: 14px;
+        line-height: 18px;
+        cursor: pointer;
+    }
+
+    mat-icon {
+        height: 18px;
+        width: 18px;
+    }
+}
+
+button:has(+ mat-icon svg) {
+    line-height: 48px
+}
+
+.button-dark {
+    background-color: var(--xa-black);
+    color: var(--xa-white);
+
+    mat-icon {
+        fill: var(--xa-white) !important;
+    }
+}
+
+.button-red {
+    background-color: var(--xa-red);
+    color: var(--xa-white);
+
+    mat-icon {
+        fill: var(--xa-white) !important;
+    }
+}
+
+.button-outline-danger {
+    background-color: var(--xa-white);
+    border: 1px solid var(--xa-red);
+
+    label {
+        color: var(--xa-red);
+    }
+
+    mat-icon {
+        fill: var(--xa-red) !important;
+    }
+}
+
+.button-success {
+    background-color: var(--xa-green);
+    border: 1px solid var(--xa-green);
+
+    mat-icon {
+        fill: var(--xa-black) !important;
+    }
+
+    label {
+        color: var(--xa-black);
+    }
+}
+
+.button-primary {
+    background-color: var(--xa-primary);
+    border: 1px solid var(--xa-primary);
+
+    mat-icon {
+        fill: var(--xa-white) !important;
+    }
+
+    label {
+        color: var(--xa-white);
+    }
+}
+
+.button-secondary {
+    background-color: var(--xa-secondary);
+    border: 1px solid var(--xa-secondary);
+
+    mat-icon {
+        fill: var(--xa-white) !important;
+    }
+
+    label {
+        color: var(--xa-white);
+    }
+}
+
+.button-outline {
+    background-color: transparent;
+    border: 1px solid var(--xa-light-gray) !important;
+
+
+    mat-icon {
+        fill: var(--xa-black) !important;
+    }
+
+    label {
+        color: var(--xa-black);
+    }
+}
+
+.btn-disabled {
+    mat-icon {
+        fill: var(--xa-white) !important;
+    }
+}
+
+.btn-disabled-outline {
+    background-color: var(--xa-white);
+    border: 1px solid var(--xa-light-gray);
+    cursor: default;
+    pointer-events: none;
+    opacity: 0.4;
+}

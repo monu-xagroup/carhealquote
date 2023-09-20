@@ -1,0 +1,160 @@
+:root {
+  --xa-blue: #3B82F6;
+  --xa-light-blue: #72BFF9;
+  --xa-green: #9CE931;
+  --xa-red: #FC0000;
+  --xa-white: #FFFFFF;
+  --xa-black: rgb(26, 34, 51);
+  --xa-yellow: #EAB308;
+  --xa-purple: #B34CB5;
+  --xa-orange: #E3843F;
+  --xa-meadow: #23C19B;
+  --xa-black-dark: #000000;
+  --xa-citron: #99A32B;
+  --xa-black-medium: #0B0E15;
+  --xa-black-light: #102013;
+  --xa-neutral-black: #181B1F;
+
+  //status
+  --xa-draft: #C1C3C7;
+  --xa-noshow: #FC0000;
+  --xa-approve: #B3E573;
+  --xa-pending-approval: #F88318;
+  --xa-vehicle-detail: #93BCE1;
+  --xa-upload-document: #3DB8B0;
+  --xa-upload-photo: #C09B80;
+  --xa-repair-estimate: #D3CD28;
+  --xa-invoice-ready: #B463EE;
+  --xa-ready-to-invoice: #93BCE1;
+  ;
+  --xa-ai-analysis: #B463EE;
+  //
+  --xa-dark-gray: rgba(26, 34, 51, 0.7);
+  --xa-gray: rgba(26, 34, 51, 0.4);
+  --xa-bold-gray: rgba(26, 34, 51, 0.05);
+  --xa-mild-bold-gray: rgba(26, 34, 51, 0.03);
+  --xa-light-gray: rgba(26, 34, 51, 0.2);
+  --xa-light-capsule-white: rgba(255, 255, 255, 0.30);
+  --xa-light-radio-gray: rgba(26, 34, 51, 0.02);
+  --xa-box-shadow: rgba(96, 108, 128, 0.05);
+  --xa-lighter-gray: rgba(26, 34, 51, 0.1);
+  --xa-lighter-gray-darker: rgba(26, 34, 51, 0.16);
+  --xa-search-border: #D9D9D9;
+  --xa-form-border: #D7D7D7;
+  --xa-tab-background: #DBDDE2;
+  --xa-card-dark: rgba(255, 255, 255, 0.7);
+  --xa-tab-default-content: rgba(255, 255, 255, 0.83);
+
+  --xa-primary: #1B03A3;
+  --xa-secondary: #4C6BD2;
+  --xa-tertiary: #C6CAE7;
+  --xa-white-light: rgba(255, 255, 255, 0.47);
+  --xa-empty-card: rgba(239, 239, 239, 0.32);
+  --xa-border-gray: #C1C1C1;
+  --xa-text-ligher-gray: #979AA0;
+
+  --xa-golden-tainoi: #FFCD4B;
+  --xa-sunset-orange: #F73D3D;
+  --xa-secondary-light: #BDCCFE;
+  --xa-tertiary-light: #C6CFED;
+  --xa-repair-header: #03A31B;
+  --xa-light-blue: #AAC7FA;
+  --xa-light-blue1: #69A5C9;
+  --xa-light-green: #91C009;
+  --xa-light-green1: #7EB699;
+  --xa-light-pink: #CE6DD0;
+  --xa-dark-red: #B53E3E;
+  --xa-dark-red2: #FC0000;
+  --xa-green-medium: #83AF4A;
+  --xa-orange2: #D2A120;
+  --xa-light-gray-disabled: #F4F4F5;
+  --xa-dark-gray-disabled: #C8CACE;
+  --xa-dp-light-green: #7CD18F;
+  --xa-dp-dark-green: #1B9235;
+  --xa-dp-light-orange: #FFDB59;
+  --xa-dp-dark-orange: #D4A600;
+  --xa-dp-light-gray: #C9C9C9;
+  --xa-dp-dark-gray: #78777D;
+  --xa-popup-light-gray: #F1F2F6;
+  --xa-white-light: rgba(255, 255, 255, 0.15);
+  --xa-table-light: #F9F9F9;
+  --xa-table-header-light: rgba(198, 202, 231, 0.3);
+}
+
+@import "../../../node_modules/@angular/material//theming";
+@include mat-core();
+
+$primary-palette: (
+  50 : #e7f0fe,
+  100 : #c4dafc,
+  200 : #9dc1fb,
+  300 : #76a8f9,
+  400 : #5895f7,
+  500 : #3b82f6,
+  600 : #357af5,
+  700 : #2d6ff3,
+  800 : #2665f2,
+  900 : #1952ef,
+  A100 : #ffffff,
+  A200 : #eef2ff,
+  A400 : #bbcbff,
+  A700 : #a1b8ff,
+  contrast: (50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #000000,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  )
+);
+$warn-palette: (
+  50 : #ffe0e0,
+  100 : #feb3b3,
+  200 : #fe8080,
+  300 : #fd4d4d,
+  400 : #fc2626,
+  500 : #fc0000,
+  600 : #fc0000,
+  700 : #fb0000,
+  800 : #fb0000,
+  900 : #fa0000,
+  A100 : #ffffff,
+  A200 : #ffeded,
+  A400 : #ffbaba,
+  A700 : #ffa1a1,
+  contrast: (50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #ffffff,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  )
+);
+
+$my-primary: mat-palette($primary-palette, 500);
+$my-accent: mat-palette($primary-palette, 500);
+$my-warn: mat-palette($warn-palette, 500);
+$my-primary-lightest: mat-palette($primary-palette, 500);
+
+$my-theme: mat-light-theme($my-primary, $my-accent, $my-warn);
+
+@include angular-material-theme($my-theme);
+
+/* Font family */
+@import url(assets/fonts/inter.css);
