@@ -28,7 +28,9 @@
     // })
     var array = Object.keys(data);
     for(var i=0; i<array.length; i++) {
-      localStorage.setItem(array[i], data[array[i]])
+      if(!(localStorage.getItem(array[i])))  {
+        localStorage.setItem(array[i], data[array[i]])
+      }
     }
     // localStorage.setItem('correlationId', data[array[i]])
     debugger;
