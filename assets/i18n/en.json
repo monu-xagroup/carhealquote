@@ -255,6 +255,7 @@
   "verified": "Verified",
   "description": "Description",
   "no_repair_tasks_available": "No tasks are currently available.",
+  "no_repair_jobs_defined": "Jobs are not defined. Please check with your Manager",
   "units": "Units",
   "price_unit": "Price/Unit",
   "ready_for_invoice": "Ready for Invoice",
@@ -292,6 +293,7 @@
   "total_cost": "Total Cost",
   "workshop": "Workshop",
   "cannot_start_future_date": "Cannot start future repair jobs",
+  "cannot_stop_job_date": "All the mandatory tasks must be completed before stopping the jobs",
   "view_invoices": "View Invoices",
   "total_parts": "Total Parts",
   "labour": " Labour",
@@ -721,7 +723,7 @@
   "invalid_number": "Amount is not valid.",
   "Pick_up_date_cannot_set_as_past_date": "Pick up date cannot set as past date",
   "repair_stages_are_not_completed": "Repair stages are not completed",
-  "stages_repair": "Repair Type Assessment is not allowed for repair stages",
+  "stages_repair": "Only repair booking type is allowed to access the repair tab",
   "no_charges": "No estimate operations or charges added.",
   "contact_id": "Contact Id",
   "company_id": "Company Id",
@@ -788,6 +790,7 @@
   "edit_analysis" : "Edit Analysis",
   "add_analysis" : "Add Analysis",
   "confirm_deleting" : "Confirm Deleting",
-  "confirm_delete_selected_part_msg" : "Are you sure you also want to delete the selected part?"
-
+  "confirm_delete_selected_part_msg" : "Are you sure you also want to delete the selected part?",
+  "msg_enter_future_date": "Please enter future date time",
+  "please_enter_code": "Please enter code"
 }
