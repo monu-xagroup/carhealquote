@@ -33208,7 +33208,7 @@ const environment = {
     recursionTimeout: 15000,
     maxRetryCount: 10
   },
-  baseUrl: 'https://carheal-dev.xagroup.com',
+  baseUrl: 'https://carhealquote.vercel.app',
   caseMgmtUrl: 'https://apim-dih-dev01.azure-api.net/case-management-api-dev',
   bookingMgmtUrl: 'https://apim-dih-dev01.azure-api.net/booking-management-api-dev',
   autoCoreApi: 'https://apim-dih-dev01.azure-api.net/autocoreapi-dev',
