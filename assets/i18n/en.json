@@ -792,10 +792,5 @@
   "confirm_deleting" : "Confirm Deleting",
   "confirm_delete_selected_part_msg" : "Are you sure you also want to delete the selected part?",
   "msg_enter_future_date": "Please enter future date time",
-  "please_enter_code": "Please enter code",
-  "popup_window_blocked_header": "Popup windows are blocked. Follow these steps to allow pop-ups.",
-  "popup_window_blocked_step1": "Open your browser's settings.",
-  "popup_window_blocked_step2": "Find the pop-up settings.",
-  "popup_window_blocked_step3": "Enable or allow pop-ups for this site.",
-  "disclaimer": "Disclaimer"
+  "please_enter_code": "Please enter code"
 }
