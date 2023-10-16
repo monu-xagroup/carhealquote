@@ -482,13 +482,10 @@ chr-booking-journal {
 
         @media (max-width: 1250px) {
           flex-direction: column;
-          display: block;
-          font-size: 0.8rem;
 
           span {
             position: relative;
             align-self: center;
-            display: block;
           }
         }
 
@@ -510,12 +507,6 @@ chr-booking-journal {
           gap: 0.2vw;
           border-radius: 3px;
           justify-content: center;
-          word-break: break-all;
-          white-space: break-spaces;
-
-          @media (max-width: 1250px) {
-              display: block;
-          }
 
           &.has-background {
             background-color: var(--xa-lighter-gray);
@@ -554,6 +545,7 @@ chr-booking-journal {
       span {
         background-color: var(--xa-white);
         color: var(--xa-black-medium);
+        line-height: 14px;
         align-items: center;
 
         &.has-background {

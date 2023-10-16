@@ -1,48 +1,43 @@
-/**
- * TinyMCE version 6.5.1 (2023-06-19)
- */
-
 (function () {
+var save = (function () {
     'use strict';
 
-    var global$2 = tinymce.util.Tools.resolve('tinymce.PluginManager');
-
-    const isSimpleType = type => value => typeof value === type;
-    const isFunction = isSimpleType('function');
+    var global = tinymce.util.Tools.resolve('tinymce.PluginManager');
 
     var global$1 = tinymce.util.Tools.resolve('tinymce.dom.DOMUtils');
 
-    var global = tinymce.util.Tools.resolve('tinymce.util.Tools');
+    var global$2 = tinymce.util.Tools.resolve('tinymce.util.Tools');
 
-    const option = name => editor => editor.options.get(name);
-    const register$2 = editor => {
-      const registerOption = editor.options.register;
-      registerOption('save_enablewhendirty', {
-        processor: 'boolean',
-        default: true
-      });
-      registerOption('save_onsavecallback', { processor: 'function' });
-      registerOption('save_oncancelcallback', { processor: 'function' });
+    var enableWhenDirty = function (editor) {
+      return editor.getParam('save_enablewhendirty', true);
     };
-    const enableWhenDirty = option('save_enablewhendirty');
-    const getOnSaveCallback = option('save_onsavecallback');
-    const getOnCancelCallback = option('save_oncancelcallback');
+    var hasOnSaveCallback = function (editor) {
+      return !!editor.getParam('save_onsavecallback');
+    };
+    var hasOnCancelCallback = function (editor) {
+      return !!editor.getParam('save_oncancelcallback');
+    };
+    var Settings = {
+      enableWhenDirty: enableWhenDirty,
+      hasOnSaveCallback: hasOnSaveCallback,
+      hasOnCancelCallback: hasOnCancelCallback
+    };
 
-    const displayErrorMessage = (editor, message) => {
+    var displayErrorMessage = function (editor, message) {
       editor.notificationManager.open({
-        text: message,
+        text: editor.translate(message),
         type: 'error'
       });
     };
-    const save = editor => {
-      const formObj = global$1.DOM.getParent(editor.id, 'form');
-      if (enableWhenDirty(editor) && !editor.isDirty()) {
+    var save = function (editor) {
+      var formObj;
+      formObj = global$1.DOM.getParent(editor.id, 'form');
+      if (Settings.enableWhenDirty(editor) && !editor.isDirty()) {
         return;
       }
       editor.save();
-      const onSaveCallback = getOnSaveCallback(editor);
-      if (isFunction(onSaveCallback)) {
-        onSaveCallback.call(editor, editor);
+      if (Settings.hasOnSaveCallback(editor)) {
+        editor.execCallback('save_onsavecallback', editor);
         editor.nodeChanged();
         return;
       }
@@ -60,59 +55,66 @@
         displayErrorMessage(editor, 'Error: No form element found.');
       }
     };
-    const cancel = editor => {
-      const h = global.trim(editor.startContent);
-      const onCancelCallback = getOnCancelCallback(editor);
-      if (isFunction(onCancelCallback)) {
-        onCancelCallback.call(editor, editor);
+    var cancel = function (editor) {
+      var h = global$2.trim(editor.startContent);
+      if (Settings.hasOnCancelCallback(editor)) {
+        editor.execCallback('save_oncancelcallback', editor);
         return;
       }
-      editor.resetContent(h);
+      editor.setContent(h);
+      editor.undoManager.clear();
+      editor.nodeChanged();
+    };
+    var Actions = {
+      save: save,
+      cancel: cancel
     };
 
-    const register$1 = editor => {
-      editor.addCommand('mceSave', () => {
-        save(editor);
+    var register = function (editor) {
+      editor.addCommand('mceSave', function () {
+        Actions.save(editor);
       });
-      editor.addCommand('mceCancel', () => {
-        cancel(editor);
+      editor.addCommand('mceCancel', function () {
+        Actions.cancel(editor);
       });
     };
+    var Commands = { register: register };
 
-    const stateToggle = editor => api => {
-      const handler = () => {
-        api.setEnabled(!enableWhenDirty(editor) || editor.isDirty());
+    var stateToggle = function (editor) {
+      return function (e) {
+        var ctrl = e.control;
+        editor.on('nodeChange dirty', function () {
+          ctrl.disabled(Settings.enableWhenDirty(editor) && !editor.isDirty());
+        });
       };
-      handler();
-      editor.on('NodeChange dirty', handler);
-      return () => editor.off('NodeChange dirty', handler);
     };
-    const register = editor => {
-      editor.ui.registry.addButton('save', {
+    var register$1 = function (editor) {
+      editor.addButton('save', {
         icon: 'save',
-        tooltip: 'Save',
-        enabled: false,
-        onAction: () => editor.execCommand('mceSave'),
-        onSetup: stateToggle(editor)
+        text: 'Save',
+        cmd: 'mceSave',
+        disabled: true,
+        onPostRender: stateToggle(editor)
       });
-      editor.ui.registry.addButton('cancel', {
-        icon: 'cancel',
-        tooltip: 'Cancel',
-        enabled: false,
-        onAction: () => editor.execCommand('mceCancel'),
-        onSetup: stateToggle(editor)
+      editor.addButton('cancel', {
+        text: 'Cancel',
+        icon: false,
+        cmd: 'mceCancel',
+        disabled: true,
+        onPostRender: stateToggle(editor)
       });
       editor.addShortcut('Meta+S', '', 'mceSave');
     };
+    var Buttons = { register: register$1 };
 
-    var Plugin = () => {
-      global$2.add('save', editor => {
-        register$2(editor);
-        register(editor);
-        register$1(editor);
-      });
-    };
+    global.add('save', function (editor) {
+      Buttons.register(editor);
+      Commands.register(editor);
+    });
+    function Plugin () {
+    }
 
-    Plugin();
+    return Plugin;
 
+}());
 })();
