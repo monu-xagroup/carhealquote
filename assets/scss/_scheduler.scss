@@ -131,6 +131,18 @@ chr-booking-journal {
   box-shadow: none;
 }
 
+.dx-scheduler-all-day-appointment,
+.dx-scheduler-timeline .dx-scheduler-appointment,
+.dx-scheduler-work-space-month .dx-scheduler-appointment {
+  box-shadow: none;
+}
+
+.dx-scheduler-all-day-appointment.dx-state-hover.dx-resizable,
+.dx-scheduler-timeline .dx-scheduler-appointment.dx-state-hover.dx-resizable,
+.dx-scheduler-work-space-month .dx-scheduler-appointment.dx-state-hover.dx-resizable {
+  box-shadow: none;
+}
+
 .dx-scheduler-appointment .dx-scheduler-appointment:not(.dx-scheduler-appointment-drag-source)::before,
 .dx-scheduler-appointment.dx-state-focused:not(.dx-scheduler-appointment-drag-source)::before {
   background-color: transparent;
@@ -265,14 +277,37 @@ chr-booking-journal {
   }
 }
 
+.outer-wrapper {
+  border-radius: 5px;
+  border: 2px solid transparent;
+}
+
+.template-color {
+  display: flex;
+  flex: 1 1 20px;
+}
+
 .template-wrap {
+  display: flex;
+  flex: 1 1 calc(100% - 20px);
   height: 100%;
-  padding: 7px 30px 7px 10px;
-  border-radius: 10px;
+  padding: 2px 18px 2px 4px;
+
+  &:hover {
+    box-shadow: #6200ee;
+  }
 
   .template-content-wrap {
+    display: flex;
+    flex-direction: column;
     height: 100%;
     width: 100%;
+  }
+
+  &.black {
+    div {
+      color: var(--xa-black);
+    }
   }
 
   div {
@@ -285,14 +320,24 @@ chr-booking-journal {
     display: flex;
 
     &.subject {
-      //padding-bottom: 5px;
       font-weight: 600;
       font-size: 12px;
 
       mat-icon {
         height: 12px;
         position: absolute;
-        right: 15px;
+        right: 0;
+      }
+    }
+
+    &.type {
+      font-weight: 500;
+      font-size: 10px;
+
+      mat-icon {
+        height: 12px;
+        width: 12px;
+        margin-right: 5px;
       }
     }
 
@@ -470,6 +515,8 @@ chr-booking-journal {
 .dx-scheduler-header-row {
   .dx-template-wrapper {
     margin: 10px 0;
+    margin: 5px;
+    border-radius: 10px;
 
     .calendar-header {
       margin: 5px 0 0 0 !important;
@@ -482,10 +529,13 @@ chr-booking-journal {
 
         @media (max-width: 1250px) {
           flex-direction: column;
+          display: block;
+          font-size: 0.8rem;
 
           span {
             position: relative;
             align-self: center;
+            display: block;
           }
         }
 
@@ -507,6 +557,8 @@ chr-booking-journal {
           gap: 0.2vw;
           border-radius: 3px;
           justify-content: center;
+          word-break: break-all;
+          white-space: break-spaces;
 
           &.has-background {
             background-color: var(--xa-lighter-gray);
@@ -545,7 +597,6 @@ chr-booking-journal {
       span {
         background-color: var(--xa-white);
         color: var(--xa-black-medium);
-        line-height: 14px;
         align-items: center;
 
         &.has-background {
@@ -698,67 +749,30 @@ td.dx-scheduler-time-panel-cell:not(.dx-scheduler-header-panel-current-time-cell
   }
 
   .draft-wrap {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    border-top: 1px solid rgba(26, 34, 51, 0.2);
-
     background-color: var(--xa-white);
-    border: 1px solid var(--xa-lighter-gray);
-    border-radius: 8px;
 
     .draggable {
-      align-self: center;
+      cursor: grabbing;
     }
 
     .draft-content-wrap {
-      display: flex;
-      flex-direction: column;
-      font-weight: 500;
-      font-size: 12px;
-      width: 160px;
-      padding-left: 10px;
-
-      .subject {
-        margin-bottom: 5px;
-        font-weight: 500;
-        font-size: 12px;
-        color: #0B0E15;
-      }
-
-      .booking-detail {
-        display: flex;
-        flex-direction: column;
-        font-size: 12px;
-        line-height: 18px;
-        color: var(--xa-dark-gray);
-
-        .value {
-          color: var(--xa-black);
+      .heading {
+        .draft-action-menu {
+          visibility: hidden;
         }
       }
 
-      .status {
-        font-weight: 700;
-        font-size: 12px;
-        line-height: 20px;
-        text-transform: uppercase;
-        margin-top: 10px;
-      }
-
-    }
-
-    .draft-action-menu {
-      display: none;
     }
   }
 
 }
 
 .draft-container {
+  height: 100vh;
+  overflow: hidden;
+
   .header {
-    padding: 30px 10px;
+    padding: 10px;
     margin-bottom: 0 !important;
 
     .action {
@@ -771,72 +785,149 @@ td.dx-scheduler-time-panel-cell:not(.dx-scheduler-header-panel-current-time-cell
     }
   }
 
+  .dx-scrollable {
+    height: calc(100vh - 112px);
+  }
+
   .dx-card {
     border-radius: 0;
     border: none;
   }
+}
 
-  .draft-wrap {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    border-top: 1px solid rgba(26, 34, 51, 0.2);
+.draft-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px;
+  padding: 5px;
+  border: 1px solid #E0E3E6;
+  border-radius: 16px;
+  gap: 10px;
 
-    .draggable {
-      align-self: center;
+  .draggable {
+    align-self: center;
+    cursor: grab;
+
+    &:active {
+      cursor: grabbing;
     }
 
-    .draft-content-wrap {
+    &.disable-drag {
+      pointer-events: none;
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+
+  .draft-content-wrap {
+    display: flex;
+    flex-direction: column;
+    font-weight: 500;
+    font-size: 12px;
+    width: 340px;
+    gap: 10px;
+
+    .heading {
       display: flex;
-      flex-direction: column;
-      font-weight: 500;
-      font-size: 12px;
-      width: 160px;
-      padding-left: 10px;
+      justify-content: space-between;
+      align-items: center;
+      gap: 5px;
 
       .subject {
-        margin-bottom: 5px;
-        font-weight: 500;
-        font-size: 12px;
+        font-weight: 600;
+        font-size: 16px;
         color: var(--xa-black);
-        ;
+
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        flex: 1 1 120px;
       }
 
-      .booking-detail {
+      .status-pill {
         display: flex;
-        flex-direction: column;
-        font-size: 12px;
-        line-height: 18px;
-        color: var(--xa-dark-gray);
+        padding: 3px 6px;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        border-radius: 999px;
+        font-size: 10px;
+        line-height: 14px;
+        font-weight: 400;
+        flex: 1 1 90px;
+      }
 
-        .value {
-          color: var(--xa-black);
+      .draft-action-menu {
+        display: flex;
+        gap: 5px;
+
+        button {
+          background: none;
+          padding: 0;
+        }
+
+        a {
+          display: flex;
+          border: 1px solid #D1D5DB;
+          padding: 6px 12px 6px 12px;
+          border-radius: 8px;
+          align-items: center;
+          gap: 6px;
+
+          .mat-icon {
+            height: 18px;
+            width: 18px;
+          }
+        }
+      }
+    }
+
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 20px;
+      color: #464D59;
+      gap: 5px;
+
+      .content-row {
+        display: flex;
+        gap: 5px;
+
+        .content-column {
+          display: flex;
+          flex: 1 1 50%;
         }
       }
 
-      .status {
-        font-weight: 700;
-        font-size: 12px;
-        line-height: 20px;
-        text-transform: uppercase;
-        margin-top: 10px;
+      .vehicle-location {
+        font-weight: 500;
+        color: var(--xa-primary);
       }
 
+      .no-show {
+        font-weight: 500;
+        color: var(--xa-noshow);
+      }
+
+      .value {
+        color: var(--xa-black);
+      }
     }
 
-    .draft-action-menu {
+    .badge {
       display: flex;
-      gap: 10px;
-
-      button {
-        background: none;
-        padding: 0;
-      }
-
-      a {
-        align-items: center;
-      }
+      justify-content: space-between;
+      font-weight: 400;
+      font-style: italic;
+      font-size: 12px;
+      line-height: 20px;
+      align-items: center;
+      font-variation-settings: 'slnt' -10;
+      color: #1A223366;
     }
   }
 }
@@ -898,4 +989,31 @@ td.dx-scheduler-time-panel-cell:not(.dx-scheduler-header-panel-current-time-cell
 
 .dx-popup-content {
   max-height: 340px !important;
+}
+
+.dx-scheduler-appointment {
+  border: none;
+}
+
+.dx-scheduler-all-day-appointment,
+.dx-scheduler-timeline .dx-scheduler-appointment,
+.dx-scheduler-work-space-month .dx-scheduler-appointment {
+  box-shadow: none;
+}
+
+.dx-scheduler-all-day-appointment.dx-state-hover.dx-resizable,
+.dx-scheduler-timeline .dx-scheduler-appointment.dx-state-hover.dx-resizable,
+.dx-scheduler-work-space-month .dx-scheduler-appointment.dx-state-hover.dx-resizable {
+  box-shadow: none;
+}
+
+.dx-scheduler-work-space-day .dx-scheduler-all-day-appointment .dx-scheduler-appointment-content,
+.dx-scheduler-work-space-week .dx-scheduler-all-day-appointment .dx-scheduler-appointment-content,
+.dx-scheduler-work-space-work-week .dx-scheduler-all-day-appointment .dx-scheduler-appointment-content,
+.dx-scheduler-work-space-month .dx-scheduler-appointment-content {
+  padding: 0;
+}
+
+.hovered {
+  border: 2px solid #FF4E4E;
 }

@@ -1,5 +1,5 @@
 /*button css */
-button,
+button:not(.xa-button),
 a.button {
     cursor: pointer;
     border: none;
