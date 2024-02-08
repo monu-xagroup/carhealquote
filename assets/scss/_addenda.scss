@@ -1,7 +1,7 @@
 html,
 body {
   height: 100%;
-  background: var(--xa-popup-light-gray);
+  background: #F4F5FD;
 }
 
 body {
@@ -284,7 +284,6 @@ button {
   border-radius: 8px;
   font-size: 16px;
   line-height: 20px;
-
   // color: var(--xa-black) !important;
   label {
     font-size: 16px;
@@ -533,30 +532,6 @@ a.disabled {
 
 .d-none {
   display: none ! important;
-}
-
-.exportPNG {
-  display: none !important;
-}
-
-.apexcharts-menu-open {
-  min-width: 150px !important;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 20px;
-  letter-spacing: 0em;
-  text-align: left;
-
-  .icon-wrapper {
-    display: flex;
-    gap: 6px;
-    justify-content: flex-start;
-    align-items: center;
-
-    .material-icons {
-      font-size: 20px !important;
-    }
-  }
 }
 
 .mat-drawer-container {
@@ -1053,7 +1028,7 @@ a.disabled {
 
 @media only screen and (max-device-width: 1280px) and (orientation:landscape) {
   .mat-datepicker-popup {
-    // top: 0px !important;
+    top: 0px !important;
 
     .mat-datepicker-content {
       overflow: scroll;
@@ -1072,12 +1047,11 @@ a.disabled {
   bottom: 0px;
   right: 0px;
   left: 101px;
+  height: 76px;
   z-index: 500;
   background: var(--xa-white);
+  border-top: 1px solid var(--xa-light-gray);
   justify-content: space-between;
-  height: 50px;
-  padding: 5px 0;
-  box-shadow: 0 0px 1px 0px inset;
 
   .footer-image-wrapper {
     display: flex;
@@ -1085,7 +1059,7 @@ a.disabled {
     .image-wrapper {
       background: var(--xa-white);
       align-items: center;
-      padding-left: calc(5px + 1vw);
+      padding-left: calc(5px + 1.5vw);
       flex: 1;
       display: flex;
 
@@ -1218,6 +1192,7 @@ dx-date-box input[type="datetime-local"]::-webkit-calendar-picker-indicator {
   flex-direction: row;
   width: 100%;
   gap: 15px;
+  margin-bottom: 2px;
 
   .checkbox {
     display: flex;
@@ -1234,7 +1209,6 @@ dx-date-box input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     .span-label {
       font-size: 12px;
       text-transform: none;
-      flex-shrink: 0;
     }
 
     input {
@@ -1412,6 +1386,7 @@ dx-date-box input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     font-family: 'Inter';
     font-size: 12px;
     line-height: 19px;
+    height: 170px;
     display: inline-block;
   }
 
@@ -1463,18 +1438,18 @@ dx-date-box input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 }
 
 .mh-0 {
-  margin-left: calc(-6px - 1vw);
-  margin-right: calc(-5px - 1vw);
+  margin-left: calc(-6px - 1.5vw);
+  margin-right: calc(-5px - 1.5vw);
 }
 
 .mv-0 {
-  margin-left: calc(-5px - 1vw);
-  margin-right: calc(-5px - 1vw);
+  margin-left: calc(-5px - 1.5vw);
+  margin-right: calc(-5px - 1.5vw);
 }
 
 
 .mt-0 {
-  margin-top: calc(-5px - 1vw);
+  margin-top: calc(-5px - 1.5vw);
 }
 
 .h-100 {
@@ -1602,7 +1577,7 @@ cd-timer {
   }
 
   .addenda-container {
-    padding: calc(5px + 1vw) !important;
+    padding: calc(5px + 1.5vw) !important;
     padding-bottom: 0 !important;
   }
 

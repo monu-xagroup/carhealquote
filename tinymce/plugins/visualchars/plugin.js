@@ -1,560 +1,457 @@
-/**
- * TinyMCE version 6.7.2 (2023-10-25)
- */
-
 (function () {
+var visualchars = (function (domGlobals) {
     'use strict';
 
-    const Cell = initial => {
-      let value = initial;
-      const get = () => {
+    var Cell = function (initial) {
+      var value = initial;
+      var get = function () {
         return value;
       };
-      const set = v => {
+      var set = function (v) {
         value = v;
       };
+      var clone = function () {
+        return Cell(get());
+      };
       return {
-        get,
-        set
+        get: get,
+        set: set,
+        clone: clone
       };
     };
 
     var global = tinymce.util.Tools.resolve('tinymce.PluginManager');
 
-    const get$2 = toggleState => {
-      const isEnabled = () => {
+    var get = function (toggleState) {
+      var isEnabled = function () {
         return toggleState.get();
       };
-      return { isEnabled };
+      return { isEnabled: isEnabled };
     };
+    var Api = { get: get };
 
-    const fireVisualChars = (editor, state) => {
-      return editor.dispatch('VisualChars', { state });
+    var fireVisualChars = function (editor, state) {
+      return editor.fire('VisualChars', { state: state });
     };
+    var Events = { fireVisualChars: fireVisualChars };
 
-    const hasProto = (v, constructor, predicate) => {
-      var _a;
-      if (predicate(v, constructor.prototype)) {
-        return true;
-      } else {
-        return ((_a = v.constructor) === null || _a === void 0 ? void 0 : _a.name) === constructor.name;
+    var noop = function () {
+    };
+    var constant = function (value) {
+      return function () {
+        return value;
+      };
+    };
+    var never = constant(false);
+    var always = constant(true);
+
+    var none = function () {
+      return NONE;
+    };
+    var NONE = function () {
+      var eq = function (o) {
+        return o.isNone();
+      };
+      var call = function (thunk) {
+        return thunk();
+      };
+      var id = function (n) {
+        return n;
+      };
+      var me = {
+        fold: function (n, s) {
+          return n();
+        },
+        is: never,
+        isSome: never,
+        isNone: always,
+        getOr: id,
+        getOrThunk: call,
+        getOrDie: function (msg) {
+          throw new Error(msg || 'error: getOrDie called on none.');
+        },
+        getOrNull: constant(null),
+        getOrUndefined: constant(undefined),
+        or: id,
+        orThunk: call,
+        map: none,
+        each: noop,
+        bind: none,
+        exists: never,
+        forall: always,
+        filter: none,
+        equals: eq,
+        equals_: eq,
+        toArray: function () {
+          return [];
+        },
+        toString: constant('none()')
+      };
+      if (Object.freeze) {
+        Object.freeze(me);
       }
+      return me;
+    }();
+    var some = function (a) {
+      var constant_a = constant(a);
+      var self = function () {
+        return me;
+      };
+      var bind = function (f) {
+        return f(a);
+      };
+      var me = {
+        fold: function (n, s) {
+          return s(a);
+        },
+        is: function (v) {
+          return a === v;
+        },
+        isSome: always,
+        isNone: never,
+        getOr: constant_a,
+        getOrThunk: constant_a,
+        getOrDie: constant_a,
+        getOrNull: constant_a,
+        getOrUndefined: constant_a,
+        or: self,
+        orThunk: self,
+        map: function (f) {
+          return some(f(a));
+        },
+        each: function (f) {
+          f(a);
+        },
+        bind: bind,
+        exists: bind,
+        forall: bind,
+        filter: function (f) {
+          return f(a) ? me : NONE;
+        },
+        toArray: function () {
+          return [a];
+        },
+        toString: function () {
+          return 'some(' + a + ')';
+        },
+        equals: function (o) {
+          return o.is(a);
+        },
+        equals_: function (o, elementEq) {
+          return o.fold(never, function (b) {
+            return elementEq(a, b);
+          });
+        }
+      };
+      return me;
     };
-    const typeOf = x => {
-      const t = typeof x;
+    var from = function (value) {
+      return value === null || value === undefined ? NONE : some(value);
+    };
+    var Option = {
+      some: some,
+      none: none,
+      from: from
+    };
+
+    var typeOf = function (x) {
       if (x === null) {
         return 'null';
-      } else if (t === 'object' && Array.isArray(x)) {
+      }
+      var t = typeof x;
+      if (t === 'object' && (Array.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'Array')) {
         return 'array';
-      } else if (t === 'object' && hasProto(x, String, (o, proto) => proto.isPrototypeOf(o))) {
+      }
+      if (t === 'object' && (String.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'String')) {
         return 'string';
-      } else {
-        return t;
       }
+      return t;
     };
-    const isType$1 = type => value => typeOf(value) === type;
-    const isSimpleType = type => value => typeof value === type;
-    const eq = t => a => t === a;
-    const isString = isType$1('string');
-    const isObject = isType$1('object');
-    const isNull = eq(null);
-    const isBoolean = isSimpleType('boolean');
-    const isNullable = a => a === null || a === undefined;
-    const isNonNullable = a => !isNullable(a);
-    const isNumber = isSimpleType('number');
+    var isType = function (type) {
+      return function (value) {
+        return typeOf(value) === type;
+      };
+    };
+    var isFunction = isType('function');
 
-    class Optional {
-      constructor(tag, value) {
-        this.tag = tag;
-        this.value = value;
-      }
-      static some(value) {
-        return new Optional(true, value);
-      }
-      static none() {
-        return Optional.singletonNone;
-      }
-      fold(onNone, onSome) {
-        if (this.tag) {
-          return onSome(this.value);
-        } else {
-          return onNone();
-        }
-      }
-      isSome() {
-        return this.tag;
-      }
-      isNone() {
-        return !this.tag;
-      }
-      map(mapper) {
-        if (this.tag) {
-          return Optional.some(mapper(this.value));
-        } else {
-          return Optional.none();
-        }
-      }
-      bind(binder) {
-        if (this.tag) {
-          return binder(this.value);
-        } else {
-          return Optional.none();
-        }
-      }
-      exists(predicate) {
-        return this.tag && predicate(this.value);
-      }
-      forall(predicate) {
-        return !this.tag || predicate(this.value);
-      }
-      filter(predicate) {
-        if (!this.tag || predicate(this.value)) {
-          return this;
-        } else {
-          return Optional.none();
-        }
-      }
-      getOr(replacement) {
-        return this.tag ? this.value : replacement;
-      }
-      or(replacement) {
-        return this.tag ? this : replacement;
-      }
-      getOrThunk(thunk) {
-        return this.tag ? this.value : thunk();
-      }
-      orThunk(thunk) {
-        return this.tag ? this : thunk();
-      }
-      getOrDie(message) {
-        if (!this.tag) {
-          throw new Error(message !== null && message !== void 0 ? message : 'Called getOrDie on None');
-        } else {
-          return this.value;
-        }
-      }
-      static from(value) {
-        return isNonNullable(value) ? Optional.some(value) : Optional.none();
-      }
-      getOrNull() {
-        return this.tag ? this.value : null;
-      }
-      getOrUndefined() {
-        return this.value;
-      }
-      each(worker) {
-        if (this.tag) {
-          worker(this.value);
-        }
-      }
-      toArray() {
-        return this.tag ? [this.value] : [];
-      }
-      toString() {
-        return this.tag ? `some(${ this.value })` : 'none()';
-      }
-    }
-    Optional.singletonNone = new Optional(false);
-
-    const map = (xs, f) => {
-      const len = xs.length;
-      const r = new Array(len);
-      for (let i = 0; i < len; i++) {
-        const x = xs[i];
+    var nativeSlice = Array.prototype.slice;
+    var map = function (xs, f) {
+      var len = xs.length;
+      var r = new Array(len);
+      for (var i = 0; i < len; i++) {
+        var x = xs[i];
         r[i] = f(x, i);
       }
       return r;
     };
-    const each$1 = (xs, f) => {
-      for (let i = 0, len = xs.length; i < len; i++) {
-        const x = xs[i];
+    var each = function (xs, f) {
+      for (var i = 0, len = xs.length; i < len; i++) {
+        var x = xs[i];
         f(x, i);
       }
     };
-    const filter = (xs, pred) => {
-      const r = [];
-      for (let i = 0, len = xs.length; i < len; i++) {
-        const x = xs[i];
-        if (pred(x, i)) {
-          r.push(x);
-        }
-      }
-      return r;
+    var from$1 = isFunction(Array.from) ? Array.from : function (x) {
+      return nativeSlice.call(x);
     };
 
-    const keys = Object.keys;
-    const each = (obj, f) => {
-      const props = keys(obj);
-      for (let k = 0, len = props.length; k < len; k++) {
-        const i = props[k];
-        const x = obj[i];
-        f(x, i);
-      }
-    };
-
-    const Global = typeof window !== 'undefined' ? window : Function('return this;')();
-
-    const path = (parts, scope) => {
-      let o = scope !== undefined && scope !== null ? scope : Global;
-      for (let i = 0; i < parts.length && o !== undefined && o !== null; ++i) {
-        o = o[parts[i]];
-      }
-      return o;
-    };
-    const resolve = (p, scope) => {
-      const parts = p.split('.');
-      return path(parts, scope);
-    };
-
-    const unsafe = (name, scope) => {
-      return resolve(name, scope);
-    };
-    const getOrDie = (name, scope) => {
-      const actual = unsafe(name, scope);
-      if (actual === undefined || actual === null) {
-        throw new Error(name + ' not available on this browser');
-      }
-      return actual;
-    };
-
-    const getPrototypeOf = Object.getPrototypeOf;
-    const sandHTMLElement = scope => {
-      return getOrDie('HTMLElement', scope);
-    };
-    const isPrototypeOf = x => {
-      const scope = resolve('ownerDocument.defaultView', x);
-      return isObject(x) && (sandHTMLElement(scope).prototype.isPrototypeOf(x) || /^HTML\w*Element$/.test(getPrototypeOf(x).constructor.name));
-    };
-
-    const ELEMENT = 1;
-    const TEXT = 3;
-
-    const type = element => element.dom.nodeType;
-    const value = element => element.dom.nodeValue;
-    const isType = t => element => type(element) === t;
-    const isHTMLElement = element => isElement(element) && isPrototypeOf(element.dom);
-    const isElement = isType(ELEMENT);
-    const isText = isType(TEXT);
-
-    const rawSet = (dom, key, value) => {
-      if (isString(value) || isBoolean(value) || isNumber(value)) {
-        dom.setAttribute(key, value + '');
-      } else {
-        console.error('Invalid call to Attribute.set. Key ', key, ':: Value ', value, ':: Element ', dom);
-        throw new Error('Attribute value was not simple');
-      }
-    };
-    const set = (element, key, value) => {
-      rawSet(element.dom, key, value);
-    };
-    const get$1 = (element, key) => {
-      const v = element.dom.getAttribute(key);
-      return v === null ? undefined : v;
-    };
-    const remove$3 = (element, key) => {
-      element.dom.removeAttribute(key);
-    };
-
-    const read = (element, attr) => {
-      const value = get$1(element, attr);
-      return value === undefined || value === '' ? [] : value.split(' ');
-    };
-    const add$2 = (element, attr, id) => {
-      const old = read(element, attr);
-      const nu = old.concat([id]);
-      set(element, attr, nu.join(' '));
-      return true;
-    };
-    const remove$2 = (element, attr, id) => {
-      const nu = filter(read(element, attr), v => v !== id);
-      if (nu.length > 0) {
-        set(element, attr, nu.join(' '));
-      } else {
-        remove$3(element, attr);
-      }
-      return false;
-    };
-
-    const supports = element => element.dom.classList !== undefined;
-    const get = element => read(element, 'class');
-    const add$1 = (element, clazz) => add$2(element, 'class', clazz);
-    const remove$1 = (element, clazz) => remove$2(element, 'class', clazz);
-
-    const add = (element, clazz) => {
-      if (supports(element)) {
-        element.dom.classList.add(clazz);
-      } else {
-        add$1(element, clazz);
-      }
-    };
-    const cleanClass = element => {
-      const classList = supports(element) ? element.dom.classList : get(element);
-      if (classList.length === 0) {
-        remove$3(element, 'class');
-      }
-    };
-    const remove = (element, clazz) => {
-      if (supports(element)) {
-        const classList = element.dom.classList;
-        classList.remove(clazz);
-      } else {
-        remove$1(element, clazz);
-      }
-      cleanClass(element);
-    };
-
-    const fromHtml = (html, scope) => {
-      const doc = scope || document;
-      const div = doc.createElement('div');
+    var fromHtml = function (html, scope) {
+      var doc = scope || domGlobals.document;
+      var div = doc.createElement('div');
       div.innerHTML = html;
       if (!div.hasChildNodes() || div.childNodes.length > 1) {
-        const message = 'HTML does not have a single root node';
-        console.error(message, html);
-        throw new Error(message);
+        domGlobals.console.error('HTML does not have a single root node', html);
+        throw new Error('HTML must have a single root node');
       }
       return fromDom(div.childNodes[0]);
     };
-    const fromTag = (tag, scope) => {
-      const doc = scope || document;
-      const node = doc.createElement(tag);
+    var fromTag = function (tag, scope) {
+      var doc = scope || domGlobals.document;
+      var node = doc.createElement(tag);
       return fromDom(node);
     };
-    const fromText = (text, scope) => {
-      const doc = scope || document;
-      const node = doc.createTextNode(text);
+    var fromText = function (text, scope) {
+      var doc = scope || domGlobals.document;
+      var node = doc.createTextNode(text);
       return fromDom(node);
     };
-    const fromDom = node => {
+    var fromDom = function (node) {
       if (node === null || node === undefined) {
         throw new Error('Node cannot be null or undefined');
       }
-      return { dom: node };
+      return { dom: constant(node) };
     };
-    const fromPoint = (docElm, x, y) => Optional.from(docElm.dom.elementFromPoint(x, y)).map(fromDom);
-    const SugarElement = {
-      fromHtml,
-      fromTag,
-      fromText,
-      fromDom,
-      fromPoint
+    var fromPoint = function (docElm, x, y) {
+      var doc = docElm.dom();
+      return Option.from(doc.elementFromPoint(x, y)).map(fromDom);
+    };
+    var Element = {
+      fromHtml: fromHtml,
+      fromTag: fromTag,
+      fromText: fromText,
+      fromDom: fromDom,
+      fromPoint: fromPoint
     };
 
-    const charMap = {
+    var ATTRIBUTE = domGlobals.Node.ATTRIBUTE_NODE;
+    var CDATA_SECTION = domGlobals.Node.CDATA_SECTION_NODE;
+    var COMMENT = domGlobals.Node.COMMENT_NODE;
+    var DOCUMENT = domGlobals.Node.DOCUMENT_NODE;
+    var DOCUMENT_TYPE = domGlobals.Node.DOCUMENT_TYPE_NODE;
+    var DOCUMENT_FRAGMENT = domGlobals.Node.DOCUMENT_FRAGMENT_NODE;
+    var ELEMENT = domGlobals.Node.ELEMENT_NODE;
+    var TEXT = domGlobals.Node.TEXT_NODE;
+    var PROCESSING_INSTRUCTION = domGlobals.Node.PROCESSING_INSTRUCTION_NODE;
+    var ENTITY_REFERENCE = domGlobals.Node.ENTITY_REFERENCE_NODE;
+    var ENTITY = domGlobals.Node.ENTITY_NODE;
+    var NOTATION = domGlobals.Node.NOTATION_NODE;
+
+    var Global = typeof domGlobals.window !== 'undefined' ? domGlobals.window : Function('return this;')();
+
+    var type = function (element) {
+      return element.dom().nodeType;
+    };
+    var value = function (element) {
+      return element.dom().nodeValue;
+    };
+    var isType$1 = function (t) {
+      return function (element) {
+        return type(element) === t;
+      };
+    };
+    var isText = isType$1(TEXT);
+
+    var charMap = {
       '\xA0': 'nbsp',
       '\xAD': 'shy'
     };
-    const charMapToRegExp = (charMap, global) => {
-      let regExp = '';
-      each(charMap, (_value, key) => {
+    var charMapToRegExp = function (charMap, global) {
+      var key, regExp = '';
+      for (key in charMap) {
         regExp += key;
-      });
+      }
       return new RegExp('[' + regExp + ']', global ? 'g' : '');
     };
-    const charMapToSelector = charMap => {
-      let selector = '';
-      each(charMap, value => {
+    var charMapToSelector = function (charMap) {
+      var key, selector = '';
+      for (key in charMap) {
         if (selector) {
           selector += ',';
         }
-        selector += 'span.mce-' + value;
-      });
+        selector += 'span.mce-' + charMap[key];
+      }
       return selector;
     };
-    const regExp = charMapToRegExp(charMap);
-    const regExpGlobal = charMapToRegExp(charMap, true);
-    const selector = charMapToSelector(charMap);
-    const nbspClass = 'mce-nbsp';
-
-    const getRaw = element => element.dom.contentEditable;
-
-    const wrapCharWithSpan = value => '<span data-mce-bogus="1" class="mce-' + charMap[value] + '">' + value + '</span>';
-
-    const isWrappedNbsp = node => node.nodeName.toLowerCase() === 'span' && node.classList.contains('mce-nbsp-wrap');
-    const isMatch = n => {
-      const value$1 = value(n);
-      return isText(n) && isString(value$1) && regExp.test(value$1);
+    var Data = {
+      charMap: charMap,
+      regExp: charMapToRegExp(charMap),
+      regExpGlobal: charMapToRegExp(charMap, true),
+      selector: charMapToSelector(charMap),
+      charMapToRegExp: charMapToRegExp,
+      charMapToSelector: charMapToSelector
     };
-    const isContentEditableFalse = node => isHTMLElement(node) && getRaw(node) === 'false';
-    const isChildEditable = (node, currentState) => {
-      if (isHTMLElement(node) && !isWrappedNbsp(node.dom)) {
-        const value = getRaw(node);
-        if (value === 'true') {
-          return true;
-        } else if (value === 'false') {
-          return false;
-        }
-      }
-      return currentState;
+
+    var wrapCharWithSpan = function (value) {
+      return '<span data-mce-bogus="1" class="mce-' + Data.charMap[value] + '">' + value + '</span>';
     };
-    const filterEditableDescendants = (scope, predicate, editable) => {
-      let result = [];
-      const dom = scope.dom;
-      const children = map(dom.childNodes, SugarElement.fromDom);
-      const isEditable = node => isWrappedNbsp(node.dom) || !isContentEditableFalse(node);
-      each$1(children, x => {
-        if (editable && isEditable(x) && predicate(x)) {
+    var Html = { wrapCharWithSpan: wrapCharWithSpan };
+
+    var isMatch = function (n) {
+      var value$1 = value(n);
+      return isText(n) && value$1 !== undefined && Data.regExp.test(value$1);
+    };
+    var filterDescendants = function (scope, predicate) {
+      var result = [];
+      var dom = scope.dom();
+      var children = map(dom.childNodes, Element.fromDom);
+      each(children, function (x) {
+        if (predicate(x)) {
           result = result.concat([x]);
         }
-        result = result.concat(filterEditableDescendants(x, predicate, isChildEditable(x, editable)));
+        result = result.concat(filterDescendants(x, predicate));
       });
       return result;
     };
-    const findParentElm = (elm, rootElm) => {
+    var findParentElm = function (elm, rootElm) {
       while (elm.parentNode) {
         if (elm.parentNode === rootElm) {
-          return rootElm;
+          return elm;
         }
         elm = elm.parentNode;
       }
-      return undefined;
     };
-    const replaceWithSpans = text => text.replace(regExpGlobal, wrapCharWithSpan);
+    var replaceWithSpans = function (text) {
+      return text.replace(Data.regExpGlobal, Html.wrapCharWithSpan);
+    };
+    var Nodes = {
+      isMatch: isMatch,
+      filterDescendants: filterDescendants,
+      findParentElm: findParentElm,
+      replaceWithSpans: replaceWithSpans
+    };
 
-    const show = (editor, rootElm) => {
-      const dom = editor.dom;
-      const nodeList = filterEditableDescendants(SugarElement.fromDom(rootElm), isMatch, editor.dom.isEditable(rootElm));
-      each$1(nodeList, n => {
-        var _a;
-        const parent = n.dom.parentNode;
-        if (isWrappedNbsp(parent)) {
-          add(SugarElement.fromDom(parent), nbspClass);
-        } else {
-          const withSpans = replaceWithSpans(dom.encode((_a = value(n)) !== null && _a !== void 0 ? _a : ''));
-          const div = dom.create('div', {}, withSpans);
-          let node;
-          while (node = div.lastChild) {
-            dom.insertAfter(node, n.dom);
-          }
-          editor.dom.remove(n.dom);
+    var show = function (editor, rootElm) {
+      var node, div;
+      var nodeList = Nodes.filterDescendants(Element.fromDom(rootElm), Nodes.isMatch);
+      each(nodeList, function (n) {
+        var withSpans = Nodes.replaceWithSpans(editor.dom.encode(value(n)));
+        div = editor.dom.create('div', null, withSpans);
+        while (node = div.lastChild) {
+          editor.dom.insertAfter(node, n.dom());
         }
+        editor.dom.remove(n.dom());
       });
     };
-    const hide = (editor, rootElm) => {
-      const nodeList = editor.dom.select(selector, rootElm);
-      each$1(nodeList, node => {
-        if (isWrappedNbsp(node)) {
-          remove(SugarElement.fromDom(node), nbspClass);
-        } else {
-          editor.dom.remove(node, true);
-        }
+    var hide = function (editor, body) {
+      var nodeList = editor.dom.select(Data.selector, body);
+      each(nodeList, function (node) {
+        editor.dom.remove(node, 1);
       });
     };
-    const toggle = editor => {
-      const body = editor.getBody();
-      const bookmark = editor.selection.getBookmark();
-      let parentNode = findParentElm(editor.selection.getNode(), body);
+    var toggle = function (editor) {
+      var body = editor.getBody();
+      var bookmark = editor.selection.getBookmark();
+      var parentNode = Nodes.findParentElm(editor.selection.getNode(), body);
       parentNode = parentNode !== undefined ? parentNode : body;
       hide(editor, parentNode);
       show(editor, parentNode);
       editor.selection.moveToBookmark(bookmark);
     };
+    var VisualChars = {
+      show: show,
+      hide: hide,
+      toggle: toggle
+    };
 
-    const applyVisualChars = (editor, toggleState) => {
-      fireVisualChars(editor, toggleState.get());
-      const body = editor.getBody();
+    var toggleVisualChars = function (editor, toggleState) {
+      var body = editor.getBody();
+      var selection = editor.selection;
+      var bookmark;
+      toggleState.set(!toggleState.get());
+      Events.fireVisualChars(editor, toggleState.get());
+      bookmark = selection.getBookmark();
       if (toggleState.get() === true) {
-        show(editor, body);
+        VisualChars.show(editor, body);
       } else {
-        hide(editor, body);
+        VisualChars.hide(editor, body);
+      }
+      selection.moveToBookmark(bookmark);
+    };
+    var Actions = { toggleVisualChars: toggleVisualChars };
+
+    var register = function (editor, toggleState) {
+      editor.addCommand('mceVisualChars', function () {
+        Actions.toggleVisualChars(editor, toggleState);
+      });
+    };
+    var Commands = { register: register };
+
+    var global$1 = tinymce.util.Tools.resolve('tinymce.util.Delay');
+
+    var setup = function (editor, toggleState) {
+      var debouncedToggle = global$1.debounce(function () {
+        VisualChars.toggle(editor);
+      }, 300);
+      if (editor.settings.forced_root_block !== false) {
+        editor.on('keydown', function (e) {
+          if (toggleState.get() === true) {
+            e.keyCode === 13 ? VisualChars.toggle(editor) : debouncedToggle();
+          }
+        });
       }
     };
-    const toggleVisualChars = (editor, toggleState) => {
-      toggleState.set(!toggleState.get());
-      const bookmark = editor.selection.getBookmark();
-      applyVisualChars(editor, toggleState);
-      editor.selection.moveToBookmark(bookmark);
-    };
+    var Keyboard = { setup: setup };
 
-    const register$2 = (editor, toggleState) => {
-      editor.addCommand('mceVisualChars', () => {
-        toggleVisualChars(editor, toggleState);
+    var isEnabledByDefault = function (editor) {
+      return editor.getParam('visualchars_default_state', false);
+    };
+    var Settings = { isEnabledByDefault: isEnabledByDefault };
+
+    var setup$1 = function (editor, toggleState) {
+      editor.on('init', function () {
+        var valueForToggling = !Settings.isEnabledByDefault(editor);
+        toggleState.set(valueForToggling);
+        Actions.toggleVisualChars(editor, toggleState);
       });
     };
+    var Bindings = { setup: setup$1 };
 
-    const option = name => editor => editor.options.get(name);
-    const register$1 = editor => {
-      const registerOption = editor.options.register;
-      registerOption('visualchars_default_state', {
-        processor: 'boolean',
-        default: false
-      });
-    };
-    const isEnabledByDefault = option('visualchars_default_state');
-
-    const setup$1 = (editor, toggleState) => {
-      editor.on('init', () => {
-        applyVisualChars(editor, toggleState);
-      });
-    };
-
-    const first = (fn, rate) => {
-      let timer = null;
-      const cancel = () => {
-        if (!isNull(timer)) {
-          clearTimeout(timer);
-          timer = null;
-        }
-      };
-      const throttle = (...args) => {
-        if (isNull(timer)) {
-          timer = setTimeout(() => {
-            timer = null;
-            fn.apply(null, args);
-          }, rate);
-        }
-      };
-      return {
-        cancel,
-        throttle
+    var toggleActiveState = function (editor) {
+      return function (e) {
+        var ctrl = e.control;
+        editor.on('VisualChars', function (e) {
+          ctrl.active(e.state);
+        });
       };
     };
-
-    const setup = (editor, toggleState) => {
-      const debouncedToggle = first(() => {
-        toggle(editor);
-      }, 300);
-      editor.on('keydown', e => {
-        if (toggleState.get() === true) {
-          e.keyCode === 13 ? toggle(editor) : debouncedToggle.throttle();
-        }
+    var register$1 = function (editor) {
+      editor.addButton('visualchars', {
+        active: false,
+        title: 'Show invisible characters',
+        cmd: 'mceVisualChars',
+        onPostRender: toggleActiveState(editor)
       });
-      editor.on('remove', debouncedToggle.cancel);
-    };
-
-    const toggleActiveState = (editor, enabledStated) => api => {
-      api.setActive(enabledStated.get());
-      const editorEventCallback = e => api.setActive(e.state);
-      editor.on('VisualChars', editorEventCallback);
-      return () => editor.off('VisualChars', editorEventCallback);
-    };
-    const register = (editor, toggleState) => {
-      const onAction = () => editor.execCommand('mceVisualChars');
-      editor.ui.registry.addToggleButton('visualchars', {
-        tooltip: 'Show invisible characters',
-        icon: 'visualchars',
-        onAction,
-        onSetup: toggleActiveState(editor, toggleState)
-      });
-      editor.ui.registry.addToggleMenuItem('visualchars', {
+      editor.addMenuItem('visualchars', {
         text: 'Show invisible characters',
-        icon: 'visualchars',
-        onAction,
-        onSetup: toggleActiveState(editor, toggleState)
+        cmd: 'mceVisualChars',
+        onPostRender: toggleActiveState(editor),
+        selectable: true,
+        context: 'view',
+        prependToContext: true
       });
     };
 
-    var Plugin = () => {
-      global.add('visualchars', editor => {
-        register$1(editor);
-        const toggleState = Cell(isEnabledByDefault(editor));
-        register$2(editor, toggleState);
-        register(editor, toggleState);
-        setup(editor, toggleState);
-        setup$1(editor, toggleState);
-        return get$2(toggleState);
-      });
-    };
+    global.add('visualchars', function (editor) {
+      var toggleState = Cell(false);
+      Commands.register(editor, toggleState);
+      register$1(editor);
+      Keyboard.setup(editor, toggleState);
+      Bindings.setup(editor, toggleState);
+      return Api.get(toggleState);
+    });
+    function Plugin () {
+    }
 
-    Plugin();
+    return Plugin;
 
+}(window));
 })();

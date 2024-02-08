@@ -26,9 +26,8 @@
   --xa-repair-estimate: #D3CD28;
   --xa-invoice-ready: #B463EE;
   --xa-ready-to-invoice: #93BCE1;
-  --xa-bluesh-grey: #201177;
+  ;
   --xa-ai-analysis: #B463EE;
-  --xa-in-progress: #4301FE;
   //
   --xa-dark-gray: rgba(26, 34, 51, 0.7);
   --xa-gray: rgba(26, 34, 51, 0.4);
@@ -53,7 +52,6 @@
   --xa-empty-card: rgba(239, 239, 239, 0.32);
   --xa-border-gray: #C1C1C1;
   --xa-text-ligher-gray: #979AA0;
-  --xa-legend-highlight: rgba(76, 107, 210, 0.23);
 
   --xa-golden-tainoi: #FFCD4B;
   --xa-sunset-orange: #F73D3D;
@@ -73,7 +71,6 @@
   --xa-dark-gray-disabled: #C8CACE;
   --xa-dp-light-green: #7CD18F;
   --xa-dp-dark-green: #1B9235;
-  --xa-dp-medium-green: #09C269;
   --xa-dp-light-orange: #FFDB59;
   --xa-dp-dark-orange: #D4A600;
   --xa-dp-light-gray: #C9C9C9;
@@ -82,37 +79,26 @@
   --xa-white-light: rgba(255, 255, 255, 0.15);
   --xa-table-light: #F9F9F9;
   --xa-table-header-light: rgba(198, 202, 231, 0.3);
-  --xa-table-header: rgba(236, 236, 236, 1);
-  --xa-card-gray: #F8F8F8;
-  --xa-booking-out: #DCD6B8;
-  --xa-garage-requested: #D4CFFC;
-  --xa-lighter-yellow: #ECDBB7;
-  --xa-lighter-green: #D2F0AB;
-  --xa-booking-out: #B18C6A;
-  --xa-assigned-back-review: #1742CE;
-  --xa-request-estimate: #FFE2AB;
-  --xa-request-invoice: #96AEFF;
-  --xa-assigned-back-approval: #88CD30;
 }
 
 @import "../../../node_modules/@angular/material//theming";
 @include mat-core();
 
 $primary-palette: (
-  50: #e7f0fe,
-  100: #c4dafc,
-  200: #9dc1fb,
-  300: #76a8f9,
-  400: #5895f7,
-  500: #3b82f6,
-  600: #357af5,
-  700: #2d6ff3,
-  800: #2665f2,
-  900: #1952ef,
-  A100: #ffffff,
-  A200: #eef2ff,
-  A400: #bbcbff,
-  A700: #a1b8ff,
+  50 : #e7f0fe,
+  100 : #c4dafc,
+  200 : #9dc1fb,
+  300 : #76a8f9,
+  400 : #5895f7,
+  500 : #3b82f6,
+  600 : #357af5,
+  700 : #2d6ff3,
+  800 : #2665f2,
+  900 : #1952ef,
+  A100 : #ffffff,
+  A200 : #eef2ff,
+  A400 : #bbcbff,
+  A700 : #a1b8ff,
   contrast: (50 : #000000,
     100 : #000000,
     200 : #000000,
@@ -130,20 +116,20 @@ $primary-palette: (
   )
 );
 $warn-palette: (
-  50: #ffe0e0,
-  100: #feb3b3,
-  200: #fe8080,
-  300: #fd4d4d,
-  400: #fc2626,
-  500: #fc0000,
-  600: #fc0000,
-  700: #fb0000,
-  800: #fb0000,
-  900: #fa0000,
-  A100: #ffffff,
-  A200: #ffeded,
-  A400: #ffbaba,
-  A700: #ffa1a1,
+  50 : #ffe0e0,
+  100 : #feb3b3,
+  200 : #fe8080,
+  300 : #fd4d4d,
+  400 : #fc2626,
+  500 : #fc0000,
+  600 : #fc0000,
+  700 : #fb0000,
+  800 : #fb0000,
+  900 : #fa0000,
+  A100 : #ffffff,
+  A200 : #ffeded,
+  A400 : #ffbaba,
+  A700 : #ffa1a1,
   contrast: (50 : #000000,
     100 : #000000,
     200 : #000000,

@@ -166,7 +166,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 25px;
+    padding: 16px 25px;
+    // background: var(--xa-repair-header);
     color: var(--xa-white);
 
     .title {
@@ -227,6 +228,11 @@
     display: flex;
     flex-direction: row;
     align-items: flex-start;
+    padding: 6px 10px 6px 8px;
+    background: rgba(26, 34, 51, 0.05);
+    border-width: 1px 0px;
+    border-style: solid;
+    border-color: rgba(26, 34, 51, 0.1);
     width: 100%;
 
     &.transparent {
