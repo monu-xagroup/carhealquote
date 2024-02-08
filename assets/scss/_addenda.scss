@@ -508,16 +508,9 @@ a.disabled {
       fill: var(--xa-light-green1);
     }
   }
-
-  &[color="circle-yellow"] {
-    circle {
-      fill: var(--xa-orange2);
-      color: var(--xa-orange2);
-    }
-  }
 }
 
-.mat-ripple:not(.xa-button),
+.mat-ripple,
 .mdc-checkbox__ripple {
   display: none !important;
 }
@@ -1162,7 +1155,7 @@ dx-date-box:not(.dx-datebox-time) {
 }
 
 dx-date-box input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-  background: none !important;
+  background: none !important;   
 }
 
 .comment-modalbox {
@@ -1564,14 +1557,9 @@ cd-timer {
 }
 
 :fullscreen {
-
-  side-menu,
-  .header-content,
-  .footer-full-wrapper,
-  .header {
+  side-menu, .header-content, .footer-full-wrapper, .header {
     display: none !important;
   }
-
   .main-content {
     margin-left: 0 !important;
   }
@@ -1583,14 +1571,11 @@ cd-timer {
 
   .lounge-list-container {
     height: 100vh !important;
+    height: 100% !important;
   }
 
   .lounge-content .card {
     width: calc(100vw - 2vw) !important;
-  }
-
-  .workflow-container {
-    height: 100vh !important;
   }
 }
 
@@ -1606,10 +1591,10 @@ cd-timer {
 
 @media (orientation: portrait) {
   mat-cell {
-    word-break: break-word;
+      word-break: break-word;
   }
 
   .mat-sort-header-arrow {
-    margin: 0 !important;
+      margin: 0 !important;
   }
 }
