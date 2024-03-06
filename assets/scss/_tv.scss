@@ -1,0 +1,38 @@
+.tv-hide{
+    display: none !important;
+    visibility: hidden;
+}
+
+@supports not (gap: 5px) {
+    .dropdown-container {
+        .dropdown{
+            margin-left: -16px;
+            margin-right: -16px;
+        }
+        .dropdown-wrapper{
+            margin-left: -16px;
+        }
+        .dropdown, .dropdown-wrapper{
+            background-color: white !important;
+            color: #000;
+        }
+    }
+    .workflow-row-container .card-container .workflow-details-card{
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+    .workflow-container .workflow-table-container .horizontal-workflow-table .job-item-row .job-item-cards .workflow-row-container .card-container .workflow-details-card .img-container img{
+        min-width: 48px;
+        min-height: 48px;
+    }
+
+    .left-menu .menu-item-wrapper .menu-item .item-wrapper .child-menu-wrapper .child-menu-item.active{
+        background: #1B03A3;
+    }
+    .workflow-container .workflow-table-container .horizontal-workflow-table .job-item-row .job-item-cards .workflow-row-container .workflow-header-card .card-content{
+        min-height: 48px;
+    }
+    .rounded-icon{
+        margin: auto 0;
+    }
+}
