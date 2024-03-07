@@ -39,4 +39,12 @@
     .rounded-icon{
         margin: auto 0;
     }
+
+    .workflow-row-container, .workflow-details-card, .detail-card-link, .img-container, img{
+        max-height: 75px;
+    }
+
+    .card-container,  .wordflow-details-card{
+        height: 100%;
+    }
 }
